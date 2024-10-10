@@ -2,6 +2,12 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    fontFamily: {
+      roboto: ["Roboto", "serif"],
+      poppins: ["Poppins", "serif"],
+      montserrat: ["Montserrat", "serif"],
+      dancing: ["Dancing Script", "cursive"],
+    },
     extend: {},
   },
   plugins: [],
