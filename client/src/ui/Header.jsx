@@ -3,7 +3,6 @@ import Logo from "../components/Logo";
 import Navbar from "../components/Navbar";
 import SearchOrder from "../components/SearchOrder";
 import { CiLogin } from "react-icons/ci";
-import { CiShoppingCart } from "react-icons/ci";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
