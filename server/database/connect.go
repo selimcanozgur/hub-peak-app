@@ -42,6 +42,7 @@ func Connect() {
 
 }
 
+
 func createBookTable () {
 	bookTable := `
 	CREATE TABLE IF NOT EXISTS books (
@@ -54,9 +55,9 @@ func createBookTable () {
      pages INT NOT NULL,
      summary LONGTEXT NOT NULL,
      lang VARCHAR(20) NOT NULL,
-     cover_type ENUM('Ciltli', 'İnce Kapak') NOT NULL,
+     cover_type VARCHAR(20) NOT NULL,
      image_url VARCHAR(255),
-     isbn VARCHAR(13) UNIQUE,
+     book_id INT,
      stock INT NOT NULL DEFAULT 0,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
