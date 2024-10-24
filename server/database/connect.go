@@ -38,34 +38,48 @@ func Connect() {
 	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
 
-	createBookTable()
+	createTable()
 
 }
 
+func createTable () {
+	userTable := `
+	CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      role ENUM('user', 'admin') DEFAULT 'user',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);`
 
-func createBookTable () {
-	bookTable := `
-	CREATE TABLE IF NOT EXISTS books (
-	 id INT AUTO_INCREMENT PRIMARY KEY,
-     title VARCHAR(100) NOT NULL,
-     author VARCHAR(100) NOT NULL,
-     publishing_house VARCHAR(100) NOT NULL,
-     publishing_year YEAR NOT NULL,
-     price DECIMAL(8,2) NOT NULL,
-     pages INT NOT NULL,
-     summary LONGTEXT NOT NULL,
-     lang VARCHAR(20) NOT NULL,
-     cover_type VARCHAR(20) NOT NULL,
-     image_url VARCHAR(255),
-     book_id INT,
-     stock INT NOT NULL DEFAULT 0,
-     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-	)`
-
-	_, err := DB.Exec(bookTable)
+	_, err := DB.Exec(userTable)
 
 	if err != nil {
-		log.Fatal("Tablo oluşturulamadı.", err)
+		panic("Kullanıcı tablosu oluşturulamadı.")
+	}
+
+	bookTable := `
+	CREATE TABLE IF NOT EXISTS books (
+	  id INT AUTO_INCREMENT PRIMARY KEY,
+      title VARCHAR(100) NOT NULL,
+      author VARCHAR(100) NOT NULL,
+      publishing_house VARCHAR(100) NOT NULL,
+      publishing_year YEAR NOT NULL,
+      price DECIMAL(8,2) NOT NULL,
+	  img_path VARCHAR(255) NOT NULL,
+      pages INT NOT NULL,
+      summary LONGTEXT NOT NULL,
+      lang VARCHAR(30) NOT NULL,
+	  book_cover VARCHAR(30) NOT NULL,
+      book_id INT,
+      stock INT NOT NULL DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+	);`
+
+	_, err = DB.Exec(bookTable)
+
+	if err != nil {
+		panic("Kitap tablosu oluşturulamadı.")
 	}
 }

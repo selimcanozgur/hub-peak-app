@@ -7,6 +7,18 @@ import (
 	"github.com/selimcanozgur/hub-peak-app/models"
 )
 
+func getAllBooks (context *gin.Context) {
+
+	books, err := models.AllBookQuery()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Kitaplar yüklenemedi tekrar deneyiniz.", "err": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, books)
+}
+
 func createBook(context *gin.Context) {
 	var book models.Book
 	err := context.ShouldBindJSON(&book)
@@ -33,3 +45,4 @@ func createBook(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"message": "Kitap oluşturuldu."})
 
 }
+
