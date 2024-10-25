@@ -69,7 +69,7 @@ func AllBookQuery () ([]Book, error) {
 		err := rows.Scan(    
 			&book.ID, &book.Title, &book.Author, &book.PublishingHouse, 
 			&book.PublishingYear, &book.Price, &book.ImgPath, &book.Pages, &book.Summary, 
-			&book.Lang, &book.BookCover, &book.Stock, &book.BookID, &book.CreatedAt, &book.UpdatedAt,)	
+			&book.Lang, &book.BookCover, &book.Stock, &book.BookID, &book.CreatedAt, &book.UpdatedAt)	
 
 		if err != nil {
 			return nil, err
@@ -80,4 +80,56 @@ func AllBookQuery () ([]Book, error) {
 	}
 
 	return books, nil
+}
+
+func GetBookById (id int64) (*Book, error) {
+	query := "SELECT * FROM books WHERE id = ?"
+	row := database.DB.QueryRow(query, id)
+
+	var book Book
+
+	err := row.Scan(&book.ID, &book.Title, &book.Author, &book.PublishingHouse, 
+		&book.PublishingYear, &book.Price, &book.ImgPath, &book.Pages, &book.Summary, 
+		&book.Lang, &book.BookCover, &book.Stock, &book.BookID, &book.CreatedAt, &book.UpdatedAt)
+
+		if err != nil {
+			return nil, err
+		}
+	
+		return &book, nil
+}
+
+func (book Book) Update ()  error {
+	query := `
+	UPDATE books
+	SET title = ?, author = ?, publishing_house = ?, publishing_year= ?, price = ?,
+	img_path = ?, pages = ?, summary = ?, lang = ?, book_cover = ?, stock = ?, book_id = ?
+	WHERE id = ?
+	`
+	stmt, err := database.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(book.Title, book.Author, book.PublishingHouse, book.PublishingYear, 
+	book.Price, book.ImgPath, book.Pages, book.Summary, book.Lang, book.BookCover, book.Stock, book.BookID, book.ID)
+
+	return err
+}
+
+
+func (book Book) Delete () error {
+	query := "DELETE FROM books WHERE id = ?"
+	stmt, err := database.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(book.ID)
+	return err
 }
