@@ -13,12 +13,12 @@ func AllRoutes(server *gin.Engine) {
 	server.GET("/books/:id", getOneBook)
 
 
-	adminRoutes := server.Group("/admin")
+	adminRoutes := server.Group("/books")
 	adminRoutes.Use(utils.AuthMiddleware(), utils.AdminMiddleware()) 
 	
 	{
-		adminRoutes.POST("/books", createBook)
-		adminRoutes.PUT("/books/:id", updateBook)
-		adminRoutes.DELETE("/books/:id", deleteBook)
+		adminRoutes.POST("/admin", createBook)
+		adminRoutes.PUT("/admin/:id", updateBook)
+		adminRoutes.DELETE("/admin/:id", deleteBook)
 	}
 }
