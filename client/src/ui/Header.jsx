@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Logo from "../components/Logo";
 import Navbar from "../components/Navbar";
-import SearchOrder from "../components/SearchOrder";
+import BookSearch from "../features/book/BookSearch";
 import { CiLogin } from "react-icons/ci";
 
 const Header = () => {
@@ -34,7 +34,7 @@ const Header = () => {
       <Navbar />
 
       <div className="flex gap-3 items-center">
-        <SearchOrder />
+        <BookSearch />
         <CiLogin className="text-2xl" />
       </div>
     </header>

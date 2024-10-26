@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/selimcanozgur/hub-peak-app/database"
@@ -51,31 +52,44 @@ func (b Book) Save () error {
 	return err
 }
 
-func AllBookQuery () ([]Book, error) {
+func AllBookQuery(title string, order string) ([]Book, error) {
 	query := "SELECT * FROM books"
-	rows, err := database.DB.Query(query)
+
+	// Filter by title if provided
+	if title != "" {
+		query += " WHERE title LIKE ?"
+		title = "%" + title + "%"
+	}
+
+	// Order by price if order parameter is provided
+	if order == "asc" {
+		query += " ORDER BY price ASC"
+	} else if order == "desc" {
+		query += " ORDER BY price DESC"
+	}
+
+	// Execute the query
+	var rows *sql.Rows
+	var err error
+	if title != "" {
+		rows, err = database.DB.Query(query, title)
+	} else {
+		rows, err = database.DB.Query(query)
+	}
+
 	if err != nil {
 		return nil, err
 	}
-
 	defer rows.Close()
 
 	var books []Book
-
-	for rows.Next(){
-
+	for rows.Next() {
 		var book Book
-		
-		err := rows.Scan(    
-			&book.ID, &book.Title, &book.Author, &book.PublishingHouse, 
-			&book.PublishingYear, &book.Price, &book.ImgPath, &book.Pages, &book.Summary, 
-			&book.Lang, &book.BookCover, &book.Stock, &book.BookID, &book.CreatedAt, &book.UpdatedAt)	
-
-		if err != nil {
+		if err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.PublishingHouse,
+			&book.PublishingYear, &book.Price, &book.ImgPath, &book.Pages, &book.Summary,
+			&book.Lang, &book.BookCover, &book.Stock, &book.BookID, &book.CreatedAt, &book.UpdatedAt); err != nil {
 			return nil, err
 		}
-		
-
 		books = append(books, book)
 	}
 

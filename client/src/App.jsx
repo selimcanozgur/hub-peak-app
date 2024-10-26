@@ -2,7 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./ui/AppLayout";
 import Home from "./pages/Home";
 import Book from "./features/book/Book";
-import { getAllBook } from "./services/bookAPI";
+import { getAllBook, getOneBook } from "./services/bookAPI";
+import BookDetail from "./features/book/BookDetail";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -14,9 +15,14 @@ const App = () => {
           element: <Home />,
         },
         {
-          path: "/books",
+          path: "/books/:all/:title?",
           element: <Book />,
           loader: getAllBook,
+        },
+        {
+          path: "book/:id",
+          element: <BookDetail />,
+          loader: getOneBook,
         },
       ],
     },

@@ -5,16 +5,16 @@ const Navbar = () => {
     <div>
       <ul className="flex gap-8 font-montserrat font-medium text-sm tracking-wide">
         <li>
-          <NavLink to="/">Home</NavLink>
+          <NavLink to="/">Ana Sayfa</NavLink>
         </li>
         <li>
-          <NavLink to="/books">Books</NavLink>
+          <NavLink to="/books/all">Kitaplar</NavLink>
         </li>
         <li>
-          <NavLink to="/">About</NavLink>
+          <NavLink to="/">Hakkımızda</NavLink>
         </li>
         <li>
-          <NavLink to="/">Context</NavLink>
+          <NavLink to="/">İletişim</NavLink>
         </li>
       </ul>
     </div>

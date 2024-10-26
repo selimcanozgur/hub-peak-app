@@ -1,9 +1,19 @@
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const BookItem = ({ book }) => {
-  const { title, author, publishing_house, price, img_path } = book;
+  const { id, title, author, publishing_house, price, img_path } = book;
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/book/${id}`);
+  };
+
   return (
-    <li className="w-72 h-96 justify-center shadow-lg bg-zinc-200/45 hover:bg-zinc-200/75 rounded-md mx-4 my-4 flex flex-col items-center cursor-pointer">
+    <li
+      onClick={handleClick}
+      className="w-72 h-96 justify-center shadow-lg bg-zinc-200/45 hover:bg-zinc-200/75 rounded-md mx-4 my-4 flex flex-col items-center cursor-pointer"
+    >
       <img className="w-20 mb-6 hover:w-24 duration-300" src={img_path} />
       <h1 className="text-2xl font-semibold mb-2">{title}</h1>
       <h2 className="text-lg font-medium text-gray-700 mb-2">{author}</h2>

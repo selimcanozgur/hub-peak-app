@@ -9,10 +9,11 @@ import (
 	"github.com/selimcanozgur/hub-peak-app/models"
 )
 
-func getAllBooks (context *gin.Context) {
+func getAllBooks(context *gin.Context) {
+	title := context.Query("title")
+	order := context.Query("filter")
 
-	books, err := models.AllBookQuery()
-
+	books, err := models.AllBookQuery(title, order)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "Kitaplar yüklenemedi tekrar deneyiniz.", "err": err.Error()})
 		return
@@ -20,6 +21,7 @@ func getAllBooks (context *gin.Context) {
 
 	context.JSON(http.StatusOK, books)
 }
+
 
 func getOneBook (context *gin.Context) {
 	bookId, err := strconv.ParseInt(context.Param("id"),10,64)
