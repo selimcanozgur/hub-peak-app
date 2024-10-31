@@ -1,9 +1,9 @@
-import Carousel from "../components/Carousel";
-
 const Home = () => {
   return (
-    <div className="mt-24">
-      <Carousel />
+    <div>
+      <div className="w-full h-[605px] homeBanner">
+        <img src="/img/book.png" />
+      </div>
     </div>
   );
 };
