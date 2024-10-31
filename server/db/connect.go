@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
+	"github.com/selimcanozgur/hub-peak-app/table"
 )
 
 var DB *sql.DB
@@ -23,7 +24,7 @@ func Connect() {
 	DB, err := sql.Open("mysql", DB_URI)
 
 	if err != nil {
-		log.Fatal("Veritabanı açılırken hata oluştu: %v", err)
+		log.Fatalf("Veritabanı açılırken hata oluştu: %v", err)
 	}
 
 	err = DB.Ping()
@@ -33,5 +34,13 @@ func Connect() {
 
 	log.Println("Veritabanı bağlantısı başarılı")
 
+	table.CreateTable()
 
+	_, err = DB.Exec(table.UserTable)
+
+	if err != nil {
+		panic("Kullanıcı tablosu oluşturulamadı")
+	}
+
+	
 }
