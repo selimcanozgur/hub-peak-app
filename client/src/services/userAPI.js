@@ -1,8 +1,8 @@
-const API = "http://localhost:8080/signup";
+const API = "http://localhost:8080";
 
-export async function signup(newUser) {
+export async function signupService(newUser) {
   try {
-    const res = await fetch(API, {
+    const res = await fetch(`${API}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

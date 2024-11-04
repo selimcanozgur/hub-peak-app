@@ -5,9 +5,15 @@ const Context = createContext();
 
 const ContextProvider = function ({ children }) {
   const [modal, setModal] = useState(false);
+  const [signup, setSignup] = useState(false);
+  const [login, setLogin] = useState(false);
 
   return (
-    <Context.Provider value={{ modal, setModal }}>{children}</Context.Provider>
+    <Context.Provider
+      value={{ modal, setModal, signup, setSignup, login, setLogin }}
+    >
+      {children}
+    </Context.Provider>
   );
 };
 

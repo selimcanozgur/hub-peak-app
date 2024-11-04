@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useHubPeak } from "../context/HubContext";
 import { FaTimes } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineMail } from "react-icons/ai";
 import Signup from "../features/user/Signup";
 import Logo from "./Logo";
+import Login from "../features/user/Login";
 
 const SignLoginModal = () => {
-  const { setModal } = useHubPeak();
-  const [signup, setSignup] = useState(false);
-  console.log(signup);
+  const { setModal, signup, setSignup, login, setLogin } = useHubPeak();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -51,9 +50,10 @@ const SignLoginModal = () => {
           </button>
           <div className="text-center">
             <h1 className=" text-3xl mt-32 mb-24">Bize Katıl.</h1>
-
             {signup ? (
               <Signup />
+            ) : login ? (
+              <Login />
             ) : (
               <>
                 <button
@@ -72,7 +72,12 @@ const SignLoginModal = () => {
                 </button>
                 <div>
                   Zaten bir hesabınız var mı?
-                  <strong className="text-blue-500"> Giriş yap </strong>
+                  <strong
+                    className="text-blue-500"
+                    onClick={() => setLogin(!login)}
+                  >
+                    Giriş yap
+                  </strong>
                 </div>
               </>
             )}
