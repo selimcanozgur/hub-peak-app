@@ -51,5 +51,4 @@ func Connect() {
 		panic("Kitap tablosu oluşturulamadı")
 	}
 
-
 }

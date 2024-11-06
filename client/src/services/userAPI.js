@@ -1,23 +1,20 @@
-const API = "http://localhost:8080";
+const API = "http://localhost:8080/users/admin";
 
-export async function signupService(newUser) {
+export async function getAllUser() {
   try {
-    const res = await fetch(`${API}/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
+    const res = await fetch(API, {
+      credentials: "include",
     });
 
     if (!res.ok) {
-      throw new Error(`Error: ${res.status} ${res.statusText}`);
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Sunucudan bir hata oluştu.");
     }
 
     const data = await res.json();
     return data;
   } catch (err) {
-    console.error("Signup failed:", err);
-    throw err;
+    console.error("Hata:", err.message);
+    return { error: err.message };
   }
 }

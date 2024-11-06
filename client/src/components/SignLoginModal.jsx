@@ -49,13 +49,13 @@ const SignLoginModal = () => {
             <FaTimes className="text-red-500 text-md" />
           </button>
           <div className="text-center">
-            <h1 className=" text-3xl mt-32 mb-24">Bize Katıl.</h1>
             {signup ? (
               <Signup />
             ) : login ? (
               <Login />
             ) : (
               <>
+                <h1 className=" text-3xl mt-32 mb-24">Bize Katıl.</h1>
                 <button
                   className="mb-8 border-2 rounded-full hover:bg-slate-100 px-6 py-3"
                   onClick={() => setSignup(!signup)}

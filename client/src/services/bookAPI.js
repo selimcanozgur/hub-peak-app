@@ -15,10 +15,9 @@ export async function getAllBook({ params }) {
 
     const res = await fetch(`${API}?${queryParams.toString()}`);
 
-    // Yanıt durumunu kontrol et
     if (!res.ok) {
-      const errorData = await res.json(); // Hata mesajını al
-      throw new Error(errorData.message || "Sunucudan bir hata oluştu."); // Hata mesajını fırlat
+      const errorData = await res.json();
+      throw new Error(errorData.message || "Sunucudan bir hata oluştu.");
     }
 
     const data = await res.json();

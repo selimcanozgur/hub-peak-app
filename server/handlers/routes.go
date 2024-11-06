@@ -8,16 +8,24 @@ import (
 func AllRoutes(server *gin.Engine) {
 	server.POST("/signup", signup)
 	server.POST("/login", login)
-	server.GET("/user", getUser)
+	server.GET("/profile", getUser)
 	server.GET("/books",getAllBooks)
 	server.GET("/books/:id",getOneBook)
 	
-	adminRoutes := server.Group("/books")
-	adminRoutes.Use(middlewares.AuthMiddleware(), middlewares.AdminMiddleware()) 
+	adminRoutesBook := server.Group("/books")
+	adminRoutesBook.Use(middlewares.AuthMiddleware(), middlewares.AdminMiddleware()) 
 
 	{
-		adminRoutes.POST("/admin", createBook)
-		adminRoutes.PUT("/admin/:id", deleteBook)
-		adminRoutes.DELETE("/admin/:id", updateBook)
+		adminRoutesBook.POST("/admin", createBook)
+		adminRoutesBook.PUT("/admin/:id", deleteBook)
+		adminRoutesBook.DELETE("/admin/:id", updateBook)
+	}
+
+	adminRoutesUser := server.Group("/users")
+	adminRoutesUser.Use(middlewares.AuthMiddleware(), middlewares.AdminMiddleware())
+
+	{
+		adminRoutesUser.GET("/admin", getAllUser)
+
 	}
 }

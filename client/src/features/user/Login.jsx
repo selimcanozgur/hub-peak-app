@@ -1,63 +1,73 @@
 import { useState } from "react";
-import { Input, Label } from "../../components/Input";
+import { Input } from "../../components/Input";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../components/Loader";
 import { useHubPeak } from "../../context/HubContext";
+import { userLoading } from "../user/userSlice";
 
 const Login = () => {
-  const { userData } = useHubPeak();
-  console.log(userData);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { loading } = useSelector((state) => state.user);
+  const { setModal } = useHubPeak();
+
+  const dispatch = useDispatch();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const newUser = { email, password };
+    const loginUser = { email, password };
+
     try {
+      dispatch(userLoading());
       const res = await fetch("http://localhost:8080/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginUser),
         credentials: "include",
       });
 
       if (!res.ok) {
-        throw new Error(`Error: ${res.status} ${res.statusText}`);
+        console.log("sunucu hatası");
+      } else {
+        setModal(false);
       }
-
-      const data = await res.json();
-      return data;
     } catch (err) {
-      console.error("Signup failed:", err);
-      throw err;
+      console.log(err);
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Giriş</h1>
-      <div>
-        <Label htmlFor="email">E-Posta</Label>
-        <Input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          id="email"
-          name="email"
-          required
-        />
-      </div>
-
-      <Label htmlFor="password">Şifre</Label>
+      <h1 className="text-3xl mt-32 mb-20">Giriş Yap</h1>
       <Input
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        id="password"
-        name="password"
+        className="mb-6 mx-auto"
+        value={email}
+        type="email"
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="E-Posta"
         required
       />
-      <button>Giriş yap</button>
+      <Input
+        className="mb-6 mx-auto"
+        value={password}
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Şifre"
+        required
+      />
+
+      <button
+        className="bg-blue-500 px-4 py-2 rounded-sm text-white font-medium"
+        type="submit"
+      >
+        {loading ? (
+          <p className="flex items-center gap-2">
+            Giriş yapılıyor <Loader />
+          </p>
+        ) : (
+          <p>Giriş</p>
+        )}
+      </button>
     </form>
   );
 };

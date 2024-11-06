@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,58 +9,17 @@ import (
 	"github.com/selimcanozgur/hub-peak-app/utils"
 )
 
-func signup(c *gin.Context) {
-	var user models.User
-	err := c.ShouldBindJSON(&user)
+func getAllUser(c *gin.Context){
+	users, err := models.ListUsers()
 
 	if err != nil {
-
 		fmt.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Veri ayrıştırılamadı"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch events. Try again later"})
 		return
 	}
 
-	err = user.SaveUser()
-
-	if err != nil {
-		log.Println("Hata:", err) // Hata mesajını konsola yazdır
-		c.JSON(http.StatusInternalServerError, gin.H{"message":"Kullanıcı kaydedilemedi",})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"message": "Kullanıcı kaydı başarıyla oluşturuldu"})
-
+	c.JSON(http.StatusOK, users)
 }
-
-func login (c *gin.Context){
-	var user models.User
-	
-	err := c.ShouldBindJSON(&user)
-
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Veri ayrıştırılamadı"})
-		return
-	}
-
-	err = user.LoginUser()
-
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Kullanıcı kimliği doğrulanamadı"})
-		return
-	}
-
-	token, err := utils.GenerateToken(user.ID, user.Role)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Kullanıcı kimliği doğrulanamadı, token."})
-		return
-	}
-
-	c.SetCookie("token", token, 3600, "/", "", false, true)
-	c.JSON(http.StatusOK, gin.H{"message": "Giriş başarılı"})
-
-} 
 
 func getUser(c *gin.Context) {
 	token, err := c.Cookie("token")

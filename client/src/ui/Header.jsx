@@ -4,8 +4,34 @@ import Navbar from "../components/Navbar";
 import BookSearch from "../features/book/BookSearch";
 import { CiLogin } from "react-icons/ci";
 import { useHubPeak } from "../context/HubContext";
+import { userLoaded, userError } from "../features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { CiUser } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const { status } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const res = await fetch("http://localhost:8080/profile", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.status === 401) {
+          dispatch(userError("Kullanıcı giriş yapmadı"));
+          return;
+        }
+        dispatch(userLoaded(data));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getUser();
+  }, [dispatch]);
+
   const [isScrolled, setIsScrolled] = useState(false);
   const { modal, setModal } = useHubPeak();
 
@@ -40,7 +66,13 @@ const Header = () => {
 
       <div className="flex gap-3 items-center">
         <BookSearch />
-        <CiLogin onClick={handleClick} className="text-2xl cursor-pointer" />
+        {status ? (
+          <Link to="/dashboard/profile">
+            <CiUser />
+          </Link>
+        ) : (
+          <CiLogin onClick={handleClick} className="text-2xl cursor-pointer" />
+        )}
       </div>
     </header>
   );

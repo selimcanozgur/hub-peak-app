@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/selimcanozgur/hub-peak-app/db"
@@ -31,12 +32,10 @@ func (u *User) UnmarshalJSON(data []byte) error {
 		Alias: (*Alias)(u),
 	}
 
-	// Önce temel JSON ayrıştırmasını yapıyoruz
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return err
 	}
 
-	// BirthDate'i "YYYY-MM-DD" formatında ayrıştırıyoruz
 	if aux.BirthDate != "" {
 		parsedDate, err := time.Parse("2006-01-02", aux.BirthDate)
 		if err != nil {
@@ -47,6 +46,7 @@ func (u *User) UnmarshalJSON(data []byte) error {
 
 	return nil
 }
+
 
 func (u *User) SaveUser() error {
 
@@ -92,15 +92,53 @@ func (u *User) LoginUser() error {
 	err := row.Scan(&u.ID, &u.Email, &u.FirstName, &u.LastName, &u.BirthDate, &retrievedPassword, &u.Role)
 
 	if err != nil {
+		fmt.Println(err)
 		return errors.New("Kimlik bilgileri geçersiz")
 	}
 
 	passwordIsValid := utils.ComparePassword(u.Password, retrievedPassword)
 
 	if !passwordIsValid {
+		fmt.Println(err)
 		return errors.New("Kimlik bilgileri geçersiz")
 	}
 
 	return nil
 
+}
+
+func ListUsers() ([]User, error) {
+	query := "SELECT id, email, is_active, first_name, last_name, birth_date, role, created_at, updated_at FROM users"
+	rows, err := db.DB.Query(query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var users []User
+
+	for rows.Next() {
+		var user User
+		err := rows.Scan(
+			&user.ID,
+			&user.Email,
+			&user.IsActive,
+			&user.FirstName,
+			&user.LastName,
+			&user.BirthDate,
+			&user.Role,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
 }
